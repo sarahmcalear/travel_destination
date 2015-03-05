@@ -8,12 +8,48 @@ module DestinationHelper
 
   def generate_google_api_link(geolocation)
     query_params = "?" + URI.encode_www_form({
-      location: geolocation[:latitude] + "," + geolocation[:longitude],
-      types: "food",
+      location: "#{geolocation[:latitude]} , #{geolocation[:longitude]}",
+      types: "food|cafe|bar|night_club|casino|spa|zoo|aquarium|stadium|museum",
       radius: 5000,
       key: ENV["GOOGLE_BROWSER_API_KEY"]
       })
     "https://maps.googleapis.com/maps/api/place/nearbysearch/json" + query_params
+  end
+
+  def sort_info_by_category(information)
+    spas = information["results"].select do |place|
+      place["types"].include? "spa"
+    end
+    sorted_spas = spas.sort_by {|spa| spa["rating"]}.reverse
+    bars = information["results"].select do |place|
+      place["types"].include? "bar"
+    end
+    sorted_bars = bars.sort_by {|bar| bar["rating"]}.reverse
+    restaurants = information["results"].select do |place|
+      place["types"].include? "food"
+    end
+    sorted_restaurants = restaurants.sort_by {|restaurant| restaurant["rating"]}.reverse
+    cafes = information["results"].select do |place|
+      place["types"].include? "cafe"
+    end
+    sorted_cafes = cafes.sort_by {|cafe| cafe["rating"]}.reverse
+    family_entertainment = information["results"].select do |place|
+      (place["types"].include? "zoo") || (place["types"].include? "aquarium") || (place["types"].include? "stadium") || (place["types"].include? "museum")
+    end
+    sorted_family_entertainment = family_entertainment.sort_by {|entertainment| entertainment["rating"]}.reverse
+    entertainment = information["results"].select do |place|
+      (place["types"].include? "night_club") || (place["types"].include? "casino")
+    end
+    sorted_entertainment = entertainment.sort_by {|entertainment| entertainment["rating"]}.reverse
+    {restaurants: sorted_restaurants, cafes: sorted_cafes, bars: sorted_bars, spas: sorted_spas, family_entertainment: sorted_family_entertainment, entertainment: sorted_entertainment}
+  end
+
+  def retrieve_info_from_google(search)
+    geolocation = find_latitude_and_longitude(search)
+    link = generate_google_api_link(geolocation)
+    information = HTTParty.get(link)
+    info = sort_info_by_category(information)
+    binding.pry
   end
 
 end

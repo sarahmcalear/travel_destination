@@ -50,6 +50,7 @@
 * bcrypt gem - for authentication of users
 * geocoder gem - for geolocation of places
 * uri gem - to build query params
+* httparty gem - to create connections to APIs
 
 
 

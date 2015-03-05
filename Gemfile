@@ -26,6 +26,8 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem 'geocoder'
 
+require 'httparty'
+
 
 # Use Unicorn as the app server
 # gem 'unicorn'

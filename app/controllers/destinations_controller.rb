@@ -3,13 +3,11 @@ class DestinationsController < ApplicationController
 
   def index
     @user = User.find(session[:user_id])
-    geodata = find_latitude_and_longitude(params[:location]) if params[:location]
+    data = retrieve_info_from_google(params[:location]) if params[:location]
     respond_to do |format|
       format.html
-      format.json { render json: geodata }
+      format.json { render json: data }
     end
   end
-
-
 
 end
