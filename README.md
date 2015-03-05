@@ -24,7 +24,7 @@
 1. I can delete notes I created about a destination
 1. I can view pictures of a destination
 1. I can view restaurants of a destination
-1. I can view information pertinent to travelling 
+1. I can view information pertinent to travelling
 	1. exchange rate
 	1. distance
 
@@ -48,7 +48,7 @@
 #### Gems/APIs used:
 
 * bcrypt gem - for authentication of users
-* geocoder gem - for geolocation of places 
+* geocoder gem - for geolocation of places
 * uri gem - to build query params
 
 
