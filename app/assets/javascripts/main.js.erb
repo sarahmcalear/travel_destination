@@ -1,0 +1,79 @@
+console.log('main.js loaded');
+
+var $main,
+    $categoryTemplate,
+    $placeTemplate,
+    renderCategory,
+    renderPlace,
+    addCategory,
+    addPlace,
+    createPhotoUrl;
+
+addCategory = function(name) {
+  return $(renderCategory({name: name, title: _.capitalize(name.replace('_', ' '))}))
+   .appendTo($main);
+}
+
+addPlace = function($categoryEl, gid, name, src) {
+  var $attachEl = $categoryEl.find('ul');
+  $(renderPlace({gid: gid, name: name, src: src}))
+   .appendTo($attachEl);
+}
+
+createPhotoUrl = function(photo_reference) {
+  return 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=' + photo_reference + '&key=<%= ENV["GOOGLE_BROWSER_API_KEY"] %>'
+}
+
+$(document).ready(function(){
+  $main             = $('.main');
+  $categoryTemplate = $('#gplaces-category');
+  $placeTemplate    = $('#gplaces-place');
+  renderCategory    = _.template($categoryTemplate.html());
+  renderPlace       = _.template($placeTemplate.html());
+
+  $('.location-search').on('submit', function(event){
+    event.preventDefault();
+
+    var searchLocation = $('.location-input').val();
+    // contact the database to use ruby gem to find latitude and longitude of the loacation
+    $.ajax({
+      url: '/destinations',
+      dataType: 'json',
+      type: 'get',
+      data: {location: searchLocation}
+    }).success(function(data){
+      // console.log(data);
+      var $category;
+      for (var category in data) {
+        $category = addCategory(category);
+        // console.log($category);
+
+        var name, photos;
+        for (var i=0,len=data[category].length;i<len;i++) {
+          // console.log(i); console.log(len);
+          gid    = data[category][i].id
+          name   = data[category][i].name
+          photos = data[category][i].photos
+
+          photos = _.map(photos, function(photo) {
+            return photo.photo_reference;
+          });
+
+          // console.log(gid);
+          // console.log(name);
+          // console.log(createPhotoUrl(photos[0]));
+
+          addPlace($category, gid, name, createPhotoUrl(photos[0]));
+        }
+
+      }
+
+    }).error(function(error){
+      sweetAlert("Oops...", "Something went wrong!", "error");
+      console.log("Status Code: "+error.status);
+      console.log("Status Text: "+error.statusText);
+    })
+  })
+
+
+})

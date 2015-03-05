@@ -17,6 +17,7 @@
 
   <div class="main">
 
+
   </div>
 
 
@@ -30,3 +31,22 @@
 
   </div>
 </script>
+
+<script id="gplaces-category" type="text/template">
+  <div class="category" id="<%%= name %>">
+    <h3><%%= title %></h3>
+    <ul>
+    </ul>
+  </div>
+</script>
+
+
+<script id="gplaces-place" type="text/template">
+  <li>
+    <div class="place" data-gid="<%%= gid %>">
+      <h5><%%= name %></h5>
+      <img src="<%%= src %>">
+    </div>
+  </li>
+</script>
+

@@ -92,7 +92,6 @@ module DestinationHelper
     link = generate_google_api_link(geolocation)
     information = HTTParty.get(link)
     info = sort_info_by_category(information)
-    binding.pry
   end
 
 end
