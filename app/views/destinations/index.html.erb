@@ -1,12 +1,32 @@
-<%= link_to "Logout", session_path(session[:user_id]), method: "delete" %>
-<%= link_to "Edit Profile", edit_user_path(session[:user_id]), method: "get" %>
+<div class="nav">
+  <%= link_to "Logout", session_path(session[:user_id]), method: "delete" %>
+  <%= link_to "Edit Profile", edit_user_path(session[:user_id]), method: "get" %>
+</div>
 
-<h1>Hello <%= @user.fname %>!</h1>
+<div class="box">
+  <div class="top-part">
+    <h1>Hello <%= @user.fname %>!</h1>
+
+    <form class="location-search">
+      <label>Search by location
+        <input type="text" name="location" class="location-input", placeholder="City, State/Country" value="Brooklyn, NY">
+      </label>
+      <input type="submit" name="Search" class="location-search-button" value="Search">
+    </form>
+  </div>
+
+  <div class="main">
+
+  </div>
 
 
-<form class="location-search">
-  <label>Search by location
-    <input type="text" name="location" class="location-input", placeholder="City, State/Country">
-  </label>
-  <input type="submit" name="Search" class="location-search-button">
-</form>
+
+
+</div>
+
+
+<script id="google-restaurant-info-template" type="text/template">
+  <div data-id=<%%=  %> class="main-info">
+
+  </div>
+</script>
