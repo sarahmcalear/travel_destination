@@ -1,0 +1,12 @@
+<%= link_to "Logout", session_path(session[:user_id]), method: "delete" %>
+<%= link_to "Edit Profile", edit_user_path(session[:user_id]), method: "get" %>
+
+<h1>Hello <%= @user.fname %>!</h1>
+
+
+<form class="location-search">
+  <label>Search by location
+    <input type="text" name="location" class="location-input", placeholder="City, State/Country">
+  </label>
+  <input type="submit" name="Search" class="location-search-button">
+</form>
