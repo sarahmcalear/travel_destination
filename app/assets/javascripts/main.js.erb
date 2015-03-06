@@ -3,20 +3,27 @@ console.log('main.js loaded');
 var $main,
     $categoryTemplate,
     $placeTemplate,
+    $displayTemplate,
     renderCategory,
     renderPlace,
     addCategory,
     addPlace,
-    createPhotoUrl;
+    createPhotoUrl,
+    saveLocationButton;
 
-addCategory = function(name) {
-  return $(renderCategory({name: name, title: _.capitalize(name.replace('_', ' '))}))
-   .appendTo($main);
+addDisplayDiv = function(location) {
+  return $(renderDisplayDiv({location: _.capitalize(location)})).appendTo($main);
 }
 
-addPlace = function($categoryEl, gid, name, src) {
+addCategory = function($displayEl, name) {
+  var $attachEl = $displayEl[4];
+  return $(renderCategory({name: name, title: _.capitalize(name.replace('_', ' '))}))
+   .appendTo($attachEl);
+}
+
+addPlace = function($categoryEl, gid, name, src, rating) {
   var $attachEl = $categoryEl.find('ul');
-  $(renderPlace({gid: gid, name: name, src: src}))
+  $(renderPlace({gid: gid, name: name, src: src, rating: rating}))
    .appendTo($attachEl);
 }
 
@@ -25,27 +32,37 @@ createPhotoUrl = function(photo_reference) {
 }
 
 $(document).ready(function(){
-  $main             = $('.main');
-  $categoryTemplate = $('#gplaces-category');
-  $placeTemplate    = $('#gplaces-place');
-  renderCategory    = _.template($categoryTemplate.html());
-  renderPlace       = _.template($placeTemplate.html());
+  $main               = $('.main');
+  $display            = $('.display');
+  $categoryTemplate   = $('#gplaces-category');
+  $placeTemplate      = $('#gplaces-place');
+  $displayTemplate    = $('#outline');
+  renderCategory      = _.template($categoryTemplate.html());
+  renderPlace         = _.template($placeTemplate.html());
+  renderDisplayDiv    = _.template($displayTemplate.html());
+
+
+
 
   $('.location-search').on('submit', function(event){
     event.preventDefault();
+    $main.children().remove();
 
     var searchLocation = $('.location-input').val();
     // contact the database to use ruby gem to find latitude and longitude of the loacation
     $.ajax({
-      url: '/destinations',
+      url:      '/destinations',
       dataType: 'json',
-      type: 'get',
-      data: {location: searchLocation}
+      type:     'get',
+      data:     {location: searchLocation}
     }).success(function(data){
       // console.log(data);
-      var $category;
+      var $category, $displayEl;
+
+      $displayEl = addDisplayDiv(searchLocation);
+
       for (var category in data) {
-        $category = addCategory(category);
+        $category  = addCategory($displayEl, category);
         // console.log($category);
 
         var name, photos;
@@ -54,19 +71,27 @@ $(document).ready(function(){
           gid    = data[category][i].id
           name   = data[category][i].name
           photos = data[category][i].photos
+          rating = data[category][i].rating
 
           photos = _.map(photos, function(photo) {
             return photo.photo_reference;
           });
 
-          // console.log(gid);
-          // console.log(name);
-          // console.log(createPhotoUrl(photos[0]));
-
-          addPlace($category, gid, name, createPhotoUrl(photos[0]));
+          addPlace($category, gid, name, createPhotoUrl(photos[0]), rating);
         }
-
       }
+      $('#add-location-button').click(function(){
+        var location = $(this).attr('class');
+        $.ajax({
+          url:      '/destinations',
+          type:     'post',
+          dataType: 'json',
+          data:     {destination: {location: location}}
+        }).done(function(data){
+          console.log(data)
+          // debugger
+        })
+      })
 
     }).error(function(error){
       sweetAlert("Oops...", "Something went wrong!", "error");

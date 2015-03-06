@@ -15,21 +15,18 @@
     </form>
   </div>
 
+
   <div class="main">
 
 
   </div>
 
-
-
-
 </div>
 
-
-<script id="google-restaurant-info-template" type="text/template">
-  <div data-id=<%%=  %> class="main-info">
-
-  </div>
+<script id="outline" type="text/template">
+  <h2>Showing Results for <%%= location %></h2>
+  <button class="<%%= location %>" id="add-location-button">Add Destination to Favorites</button>
+  <div class="display"></div>
 </script>
 
 <script id="gplaces-category" type="text/template">
@@ -46,6 +43,8 @@
     <div class="place" data-gid="<%%= gid %>">
       <h5><%%= name %></h5>
       <img src="<%%= src %>">
+      <p>Rating: <%%= rating %></p>
+      <button class="add-to-list" >Add to my Favorites</button>
     </div>
   </li>
 </script>

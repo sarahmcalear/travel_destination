@@ -16,6 +16,20 @@ module DestinationHelper
     "https://maps.googleapis.com/maps/api/place/nearbysearch/json" + query_params
   end
 
+  types = "food|cafe|bar|night_club|casino|spa|zoo|aquarium|stadium|museum".split("|")
+  # types.each do |type|
+  #   define_method "sort_by_#{type}"(information) do
+  #      type
+  #     type = information.select do |place|
+  #       place["types"].include? type
+  #     end
+  #     if "#{type}s" != []
+  #       sorted_"#{type}s" = "#{type}s".sort_by {|this_type| this_type["rating"]}.reverse
+  #     else
+  #       sorted_"#{type}s" = []
+  #     end
+  #   end
+  # end
 
   # def sort_info_by_category(information)
   #   types = "food|cafe|bar|night_club|casino|spa|zoo|aquarium|stadium|museum".split("|")
@@ -40,7 +54,7 @@ module DestinationHelper
       place["types"].include? "spa"
     end
     if spas != []
-      sorted_spas = spas.sort_by {|spa| spa["rating"]}.reverse
+      sorted_spas = spas.sort_by {|spa| spa["rating"] || 0}.reverse
     else
       sorted_spas = []
     end
@@ -48,7 +62,7 @@ module DestinationHelper
       place["types"].include? "bar"
     end
     if bars != []
-      sorted_bars = bars.sort_by {|bar| bar["rating"]}.reverse
+      sorted_bars = bars.sort_by {|bar| bar["rating"] || 0}.reverse
     else
       sorted_bars = []
     end
@@ -56,7 +70,7 @@ module DestinationHelper
       place["types"].include? "food"
     end
     if restaurants != []
-      sorted_restaurants = restaurants.sort_by {|restaurant| restaurant["rating"]}.reverse
+      sorted_restaurants = restaurants.sort_by {|restaurant| restaurant["rating"] || 0}.reverse
     else
       sorted_restaurants = []
     end
@@ -64,15 +78,16 @@ module DestinationHelper
       place["types"].include? "cafe"
     end
     if cafes != []
-      sorted_cafes = cafes.sort_by {|cafe| cafe["rating"]}.reverse
+      sorted_cafes = cafes.sort_by {|cafe| cafe["rating"] || 0}.reverse
     else
       sorted_cafes = []
     end
+
     family_entertainment = information["results"].select do |place|
       (place["types"].include? "zoo") || (place["types"].include? "aquarium") || (place["types"].include? "stadium") || (place["types"].include? "museum")
     end
     if family_entertainment != []
-      sorted_family_entertainment = family_entertainment.sort_by {|entertainment| entertainment["rating"]}.reverse
+      sorted_family_entertainment = family_entertainment.sort_by {|entertainment| entertainment["rating"] || 0}.reverse
     else
       sorted_family_entertainment = []
     end
@@ -80,7 +95,7 @@ module DestinationHelper
       (place["types"].include? "night_club") || (place["types"].include? "casino")
     end
     if entertainment != []
-      sorted_entertainment = entertainment.sort_by {|entertainment| entertainment["rating"]}.reverse
+      sorted_entertainment = entertainment.sort_by {|entertainment| entertainment["rating"] || 0}.reverse
     else
       sorted_entertainment = []
     end
