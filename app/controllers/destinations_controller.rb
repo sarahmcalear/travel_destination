@@ -3,6 +3,7 @@ class DestinationsController < ApplicationController
 
   def index
     @user = User.find(session[:user_id])
+    @note = Note.new
     @destinations = User.find(session[:user_id]).destinations
     data = retrieve_info_from_google(params[:location]) if params[:location]
     respond_to do |format|

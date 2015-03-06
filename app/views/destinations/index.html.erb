@@ -27,6 +27,16 @@
     </ul>
   </div>
 
+<!--   <div class="note-part">
+  <%#= form_for @note, html: { class: "hidden", id: "note-form" } do |f| %>
+    <%#= f.label :title, "Add a Note" %>
+    <%#= f.text_field :title  %>
+    <%#= f.text_area :body, size: "60x12" %>
+    <%#= f.hidden_field :destination_id %>
+    <%#= f.submit "Create" %>
+  <%# end %>
+  </div> -->
+
   <div class="main">
 
 
@@ -66,4 +76,23 @@
     <span class="remove">&times;</span>
   </li>
 </script>
+
+<script id="notes-form-template" type="text/template">
+  <form id="note-form">
+    <input type="text" name="title" id="note-title"><br>
+    <textarea name="body" rows="5" columns="10" id="note-body"></textarea><br>
+    <input name="destination_id" type="hidden" value="<%%= id %>" id="destination-id-input">
+    <input type="submit" id="save-note">
+  </form>
+</script>
+
+
+
+
+
+
+
+
+
+
 

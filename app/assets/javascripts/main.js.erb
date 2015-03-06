@@ -1,15 +1,20 @@
 console.log('main.js loaded');
 
 var $main,
+    $display,
     $categoryTemplate,
     $placeTemplate,
     $displayTemplate,
+    $favoritesTemplate,
+    $notesTemplate,
+    $favorites,
+    $favoritesList,
+    $removeFromFavorite,
     renderCategory,
     renderPlace,
-    addCategory,
-    addPlace,
-    createPhotoUrl,
-    saveLocationButton;
+    renderDisplayDiv,
+    renderFavorite,
+    renderNotesForm;
 
 addDisplayDiv = function(location) {
   return $(renderDisplayDiv({location: _.capitalize(location)})).appendTo($main);
@@ -29,6 +34,7 @@ addPlace = function($categoryEl, gid, name, src, rating) {
 
 addFavorite = function(id, location) {
   $(renderFavorite({id: id, location: location})).appendTo($favoritesList);
+  addNoteForm(id);
 
   $('.remove').click(function(){
     var $id = $(this).parent().attr('data-id');
@@ -37,6 +43,25 @@ addFavorite = function(id, location) {
     // warning to ensure that the user meant to delete
     deleteFromFavorites($id, $li)
 
+  })
+}
+
+addNoteForm = function(id) {
+  $(renderNotesForm({id: id})).appendTo($main);
+  $('#save-note').click(function(e){
+    e.preventDefault();
+    var $destination_id = $('#destination-id-input').val();
+    var $noteTitle = $('#note-title').val();
+    var $noteBody = $('#note-body').val();
+    $.ajax({
+      url:      '/notes',
+      type:     'post',
+      dataType: 'json',
+      data:     {note: {title: $noteTitle, body: $noteBody, destination_id: $destination_id}}
+    }).done(function(data){
+      console.log(data);
+      debugger
+    })
   })
 }
 
@@ -134,6 +159,7 @@ $(document).ready(function(){
   $placeTemplate      = $('#gplaces-place');
   $displayTemplate    = $('#outline');
   $favoritesTemplate  = $('#favorites-template');
+  $notesTemplate      = $('#notes-form-template');
   $favorites          = $('.favorites');
   $favoritesList      = $('.favorites-list');
   $removeFromFavorite = $('.remove');
@@ -141,6 +167,7 @@ $(document).ready(function(){
   renderPlace         = _.template($placeTemplate.html());
   renderDisplayDiv    = _.template($displayTemplate.html());
   renderFavorite      = _.template($favoritesTemplate.html());
+  renderNotesForm     = _.template($notesTemplate.html());
 
 
 
@@ -157,10 +184,10 @@ $(document).ready(function(){
   })
 
   $favorites.click(function(){
-    var $id            = $(this).attr('data-id')
-    var searchLocation = $(this).text()
-
+    var $id            = $(this).parent().attr('data-id');
+    var searchLocation = $(this).text();
     $main.children().remove();
+    addNoteForm($id);
     requestInfoAboutPlace(searchLocation);
 
   })
