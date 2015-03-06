@@ -15,6 +15,17 @@
     </form>
   </div>
 
+  <div class="left-part">
+    <h3>My Favorite Destinations:</h3>
+    <ul class="favorites-list">
+      <% @destinations.each do |des| %>
+        <li data-id="<%= des.id %>">
+          <p class="favorites"><%= des.location %></p>
+          <span class="remove">&times;</span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 
   <div class="main">
 
@@ -46,6 +57,13 @@
       <p>Rating: <%%= rating %></p>
       <button class="add-to-list" >Add to my Favorites</button>
     </div>
+  </li>
+</script>
+
+<script id="favorites-template" type="text/template">
+  <li data-id="<%%= id %>">
+    <p class="favorites"><%%= location %></p>
+    <span class="remove">&times;</span>
   </li>
 </script>
 

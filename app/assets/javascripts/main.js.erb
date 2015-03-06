@@ -27,30 +27,25 @@ addPlace = function($categoryEl, gid, name, src, rating) {
    .appendTo($attachEl);
 }
 
+addFavorite = function(id, location) {
+  $(renderFavorite({id: id, location: location})).appendTo($favoritesList);
+
+  $('.remove').click(function(){
+    var $id = $(this).parent().attr('data-id');
+    var $li = $(this).parent();
+
+    // warning to ensure that the user meant to delete
+    deleteFromFavorites($id, $li)
+
+  })
+}
+
 createPhotoUrl = function(photo_reference) {
   return 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=' + photo_reference + '&key=<%= ENV["GOOGLE_BROWSER_API_KEY"] %>'
 }
 
-$(document).ready(function(){
-  $main               = $('.main');
-  $display            = $('.display');
-  $categoryTemplate   = $('#gplaces-category');
-  $placeTemplate      = $('#gplaces-place');
-  $displayTemplate    = $('#outline');
-  renderCategory      = _.template($categoryTemplate.html());
-  renderPlace         = _.template($placeTemplate.html());
-  renderDisplayDiv    = _.template($displayTemplate.html());
-
-
-
-
-  $('.location-search').on('submit', function(event){
-    event.preventDefault();
-    $main.children().remove();
-
-    var searchLocation = $('.location-input').val();
-    // contact the database to use ruby gem to find latitude and longitude of the loacation
-    $.ajax({
+requestInfoAboutPlace = function(searchLocation) {
+      $.ajax({
       url:      '/destinations',
       dataType: 'json',
       type:     'get',
@@ -87,9 +82,14 @@ $(document).ready(function(){
           type:     'post',
           dataType: 'json',
           data:     {destination: {location: location}}
-        }).done(function(data){
+        }).success(function(data){
           console.log(data)
           // debugger
+          var newest_location = data[data.length - 1];
+          var id              = newest_location.id;
+          var location        = newest_location.location;
+          addFavorite(id, location);
+
         })
       })
 
@@ -98,6 +98,80 @@ $(document).ready(function(){
       console.log("Status Code: "+error.status);
       console.log("Status Text: "+error.statusText);
     })
+}
+
+var deleteFromFavorites = function($id, $li){
+  swal({
+  title: "Are you sure you want to delete this destination?",
+  text: "You will not be able to recover the data you have saved to it!",
+  type: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#DD6B55",
+  confirmButtonText: "Yes, delete it!",
+  cancelButtonText: "No, cancel!",
+  closeOnConfirm: false,
+  closeOnCancel: false },
+  function(isConfirm){
+    if (isConfirm) {
+      $.ajax({
+        url:      '/destinations/' + $id,
+        type:     'delete',
+        dataType: 'json',
+      }).done(function(){
+        $li.remove();
+        swal("Deleted!", "Your destination has been deleted.", "success");
+      })
+    } else {
+      swal("Cancelled", "Your favorited destination is safe :)", "error");
+    }
+  });
+}
+
+$(document).ready(function(){
+  $main               = $('.main');
+  $display            = $('.display');
+  $categoryTemplate   = $('#gplaces-category');
+  $placeTemplate      = $('#gplaces-place');
+  $displayTemplate    = $('#outline');
+  $favoritesTemplate  = $('#favorites-template');
+  $favorites          = $('.favorites');
+  $favoritesList      = $('.favorites-list');
+  $removeFromFavorite = $('.remove');
+  renderCategory      = _.template($categoryTemplate.html());
+  renderPlace         = _.template($placeTemplate.html());
+  renderDisplayDiv    = _.template($displayTemplate.html());
+  renderFavorite      = _.template($favoritesTemplate.html());
+
+
+
+
+  $('.location-search').on('submit', function(event){
+    event.preventDefault();
+    $main.children().remove();
+
+    var searchLocation = $('.location-input').val();
+    // contact the database to use ruby gem to find latitude and longitude of the loacation
+
+    requestInfoAboutPlace(searchLocation);
+
+  })
+
+  $favorites.click(function(){
+    var $id            = $(this).attr('data-id')
+    var searchLocation = $(this).text()
+
+    $main.children().remove();
+    requestInfoAboutPlace(searchLocation);
+
+  })
+
+  $removeFromFavorite.click(function(){
+    var $id = $(this).parent().attr('data-id');
+    var $li = $(this).parent();
+
+    // warning to ensure that the user meant to delete
+    deleteFromFavorites($id, $li)
+
   })
 
 

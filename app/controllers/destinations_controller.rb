@@ -3,7 +3,7 @@ class DestinationsController < ApplicationController
 
   def index
     @user = User.find(session[:user_id])
-    binding.pry
+    @destinations = User.find(session[:user_id]).destinations
     data = retrieve_info_from_google(params[:location]) if params[:location]
     respond_to do |format|
       format.html
@@ -21,6 +21,11 @@ class DestinationsController < ApplicationController
     @destinations = User.find(session[:user_id]).destinations
     render json: @destinations
 
+  end
+
+  def destroy
+    Destination.find(params[:id]).delete
+    head :no_content
   end
 
   def destination_params
