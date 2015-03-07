@@ -19,7 +19,7 @@
     <h3>My Favorite Destinations:</h3>
     <ul class="favorites-list">
       <% @destinations.each do |des| %>
-        <li data-id="<%= des.id %>">
+        <li data-destination-id="<%= des.id %>">
           <p class="favorites"><%= des.location %></p>
           <span class="remove">&times;</span>
         </li>
@@ -27,15 +27,10 @@
     </ul>
   </div>
 
-<!--   <div class="note-part">
-  <%#= form_for @note, html: { class: "hidden", id: "note-form" } do |f| %>
-    <%#= f.label :title, "Add a Note" %>
-    <%#= f.text_field :title  %>
-    <%#= f.text_area :body, size: "60x12" %>
-    <%#= f.hidden_field :destination_id %>
-    <%#= f.submit "Create" %>
-  <%# end %>
-  </div> -->
+  <div class="note-part">
+
+  </div>
+
 
   <div class="main">
 
@@ -71,7 +66,7 @@
 </script>
 
 <script id="favorites-template" type="text/template">
-  <li data-id="<%%= id %>">
+  <li data-destination-id="<%%= id %>">
     <p class="favorites"><%%= location %></p>
     <span class="remove">&times;</span>
   </li>
@@ -82,7 +77,26 @@
     <input type="text" name="title" id="note-title"><br>
     <textarea name="body" rows="5" columns="10" id="note-body"></textarea><br>
     <input name="destination_id" type="hidden" value="<%%= id %>" id="destination-id-input">
-    <input type="submit" id="save-note">
+    <input type="submit" id="save-note" value="Post">
+  </form>
+</script>
+
+<script id="note-display-template" type="text/template">
+  <div class="note" data-note-id="<%%= note_id %>">
+    <h4><%%= title %></h4>
+    <h4><%%= date %></h4>
+    <p><%%= body %></p>
+    <button class="edit-note-button">Edit</button>
+    <button class="delete-note-button">Delete</button>
+  </div>
+</script>
+
+<script id="edit-note-template" type="text/template">
+  <form id="note-edit-form">
+    <input type="text" name="title" id="edit-title" value="<%%= title %>"><br>
+    <textarea name="body" rows="5" columns="10" id="edit-body"><%%= body %></textarea><br>
+    <input type="submit" id="update-note" value="Update">
+    <button class="cancel-note-edit">Cancel</button>
   </form>
 </script>
 

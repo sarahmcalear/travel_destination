@@ -7,6 +7,8 @@ var $main,
     $displayTemplate,
     $favoritesTemplate,
     $notesTemplate,
+    $noteDisplayTemplate,
+    $noteEditTemplate,
     $favorites,
     $favoritesList,
     $removeFromFavorite,
@@ -14,7 +16,10 @@ var $main,
     renderPlace,
     renderDisplayDiv,
     renderFavorite,
-    renderNotesForm;
+    renderNotesForm,
+    renderNote,
+    renderEditNote,
+    currentDestinationId;
 
 addDisplayDiv = function(location) {
   return $(renderDisplayDiv({location: _.capitalize(location)})).appendTo($main);
@@ -37,7 +42,7 @@ addFavorite = function(id, location) {
   addNoteForm(id);
 
   $('.remove').click(function(){
-    var $id = $(this).parent().attr('data-id');
+    var $id = $(this).parent().attr('data-destination-id');
     var $li = $(this).parent();
 
     // warning to ensure that the user meant to delete
@@ -60,9 +65,52 @@ addNoteForm = function(id) {
       data:     {note: {title: $noteTitle, body: $noteBody, destination_id: $destination_id}}
     }).done(function(data){
       console.log(data);
-      debugger
-    })
+      addNote([data]);
+    });
+  });
+}
+
+addNote = function(data){
+  for (var i=0,len=data.length; i<len; i++){
+    var title  = data[i].title,
+        date   = data[i].created_at,
+        body   = data[i].body,
+        noteId = data[i].id;
+    $(renderNote({title: title, date: date, body: body, note_id: noteId})).appendTo($('.note-part'));
+  }
+  // add event listener on buttons to edit and delete
+  $('.edit-note-button').click(function(){
+    var $noteId = $(this).parent().attr('data-note-id'),
+        $title  = $(this).parent().children().first().text(),
+        $body   = $(this).parent().children('p').text();
+
+    editNote($noteId, $title, $body);
   })
+}
+
+editNote = function($noteId, $title, $body){
+  var $currentNote = $('[data-note-id="' + $noteId + '"]');
+  $currentNote.children().hide();
+  $(renderEditNote({title: $title, body: $body})).appendTo($currentNote);
+    // update event listener
+    $('#update-note').click(function(e){
+      e.preventDefault();
+      var $newTitle = $('#edit-title').val(),
+          $newBody  = $('#edit-body').val();
+      $.ajax({
+        url:      '/destinations/' + currentDestinationId + '/notes/' + $noteId,
+        type:     'put',
+        dataType: 'json',
+        data:     {note: {title: $newTitle, body: $newBody}}
+      }).done(function(data){
+        $currentNote.children().first().text(data.title);
+        $currentNote.children('p').text(data.body);
+        $currentNote.children().show();
+        $('#note-edit-form').remove();
+        // debugger
+      })
+
+    })
 }
 
 createPhotoUrl = function(photo_reference) {
@@ -153,47 +201,62 @@ var deleteFromFavorites = function($id, $li){
 }
 
 $(document).ready(function(){
-  $main               = $('.main');
-  $display            = $('.display');
-  $categoryTemplate   = $('#gplaces-category');
-  $placeTemplate      = $('#gplaces-place');
-  $displayTemplate    = $('#outline');
-  $favoritesTemplate  = $('#favorites-template');
-  $notesTemplate      = $('#notes-form-template');
-  $favorites          = $('.favorites');
-  $favoritesList      = $('.favorites-list');
-  $removeFromFavorite = $('.remove');
-  renderCategory      = _.template($categoryTemplate.html());
-  renderPlace         = _.template($placeTemplate.html());
-  renderDisplayDiv    = _.template($displayTemplate.html());
-  renderFavorite      = _.template($favoritesTemplate.html());
-  renderNotesForm     = _.template($notesTemplate.html());
+  $main                = $('.main');
+  $display             = $('.display');
+  $categoryTemplate    = $('#gplaces-category');
+  $placeTemplate       = $('#gplaces-place');
+  $displayTemplate     = $('#outline');
+  $favoritesTemplate   = $('#favorites-template');
+  $notesTemplate       = $('#notes-form-template');
+  $noteDisplayTemplate = $('#note-display-template');
+  $noteEditTemplate    = $('#edit-note-template');
+  $favorites           = $('.favorites');
+  $favoritesList       = $('.favorites-list');
+  $removeFromFavorite  = $('.remove');
+  renderCategory       = _.template($categoryTemplate.html());
+  renderPlace          = _.template($placeTemplate.html());
+  renderDisplayDiv     = _.template($displayTemplate.html());
+  renderFavorite       = _.template($favoritesTemplate.html());
+  renderNotesForm      = _.template($notesTemplate.html());
+  renderNote           = _.template($noteDisplayTemplate.html());
+  renderEditNote       = _.template($noteEditTemplate.html());
 
 
 
-
+  // when a user hits enter or the button to search for a location, these events are triggered:
+  //   the google place api gets hit and information gets appended to the page
   $('.location-search').on('submit', function(event){
     event.preventDefault();
+    $('.note-part').children().remove();
     $main.children().remove();
 
     var searchLocation = $('.location-input').val();
     // contact the database to use ruby gem to find latitude and longitude of the loacation
-
     requestInfoAboutPlace(searchLocation);
 
   })
 
+  // a user can add a location to his favorites
   $favorites.click(function(){
-    var $id            = $(this).parent().attr('data-id');
+    var $id            = $(this).parent().attr('data-destination-id');
     var searchLocation = $(this).text();
     $main.children().remove();
-    addNoteForm($id);
-    requestInfoAboutPlace(searchLocation);
+    // retrieve notes and additional information about the saved location
+    $.ajax({
+      url:      '/destinations/' + $id + '/notes',
+      dataType: 'json',
+      type:     'get'
+    }).done(function(data){
+      currentDestinationId = $id;
+      addNoteForm($id);
+      addNote(data);
+      requestInfoAboutPlace(searchLocation);
+    });
 
   })
 
   $removeFromFavorite.click(function(){
-    var $id = $(this).parent().attr('data-id');
+    var $id = $(this).parent().attr('data-destination-id');
     var $li = $(this).parent();
 
     // warning to ensure that the user meant to delete
