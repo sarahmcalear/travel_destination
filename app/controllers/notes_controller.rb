@@ -27,6 +27,8 @@ class NotesController < ApplicationController
   end
 
   def destroy
+    Note.find(params[:id]).destroy
+    head :no_content
   end
 
   def note_params

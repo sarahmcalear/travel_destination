@@ -1,6 +1,7 @@
 console.log('main.js loaded');
 
 var $main,
+    $mainSearch,
     $display,
     $categoryTemplate,
     $placeTemplate,
@@ -86,13 +87,44 @@ addNote = function(data){
 
     editNote($noteId, $title, $body);
   })
+
+  // delete
+  $('.delete-note-button').click(function(){
+    var $note = $(this).parent();
+    var $noteId = $note.attr('data-note-id');
+
+    // $.ajax({
+    //     url: '/notes/' + $noteId,
+    //     type: 'delete'
+    //   }).done(function(data){
+    //     $note.remove();
+    //     // swal("Deleted!", "Your note has been deleted.", "success");
+    //   })
+    swal({
+      title: "Are you sure?",
+      text: "You will not be able to recover this note!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "Yes, delete it!",
+      closeOnConfirm: false
+    }, function(){
+      $.ajax({
+        url: '/notes/' + $noteId,
+        type: 'delete'
+      }).done(function(data){
+        $note.remove();
+        swal("Deleted!", "Your note has been deleted.", "success");
+      })
+    });
+  })
 }
 
 editNote = function($noteId, $title, $body){
   var $currentNote = $('[data-note-id="' + $noteId + '"]');
   $currentNote.children().hide();
   $(renderEditNote({title: $title, body: $body})).appendTo($currentNote);
-    // update event listener
+    // note update event listener functionality
     $('#update-note').click(function(e){
       e.preventDefault();
       var $newTitle = $('#edit-title').val(),
@@ -107,16 +139,23 @@ editNote = function($noteId, $title, $body){
         $currentNote.children('p').text(data.body);
         $currentNote.children().show();
         $('#note-edit-form').remove();
-        // debugger
       })
 
     })
+    $('.cancel-note-edit').click(function(e){
+      e.preventDefault();
+      $currentNote.children().show();
+      $('#note-edit-form').remove();
+    })
 }
 
+// generates google's link to specific picture
 createPhotoUrl = function(photo_reference) {
   return 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=' + photo_reference + '&key=<%= ENV["GOOGLE_BROWSER_API_KEY"] %>'
 }
 
+// a user searches for a location, either through favorites or new search.
+// this retrieves te info from the google place api
 requestInfoAboutPlace = function(searchLocation) {
       $.ajax({
       url:      '/destinations',
@@ -124,18 +163,16 @@ requestInfoAboutPlace = function(searchLocation) {
       type:     'get',
       data:     {location: searchLocation}
     }).success(function(data){
-      // console.log(data);
-      var $category, $displayEl;
+      var $category;
+      // calls method to create a div for the searched data
+      var $displayEl = addDisplayDiv(searchLocation);
 
-      $displayEl = addDisplayDiv(searchLocation);
-
+      // creates categories and displays data within
       for (var category in data) {
         $category  = addCategory($displayEl, category);
-        // console.log($category);
 
         var name, photos;
         for (var i=0,len=data[category].length;i<len;i++) {
-          // console.log(i); console.log(len);
           gid    = data[category][i].id
           name   = data[category][i].name
           photos = data[category][i].photos
@@ -148,6 +185,7 @@ requestInfoAboutPlace = function(searchLocation) {
           addPlace($category, gid, name, createPhotoUrl(photos[0]), rating);
         }
       }
+      // adds functionality to the favorites button (adds location to database and dom)
       $('#add-location-button').click(function(){
         var location = $(this).attr('class');
         $.ajax({
@@ -186,11 +224,13 @@ var deleteFromFavorites = function($id, $li){
   closeOnCancel: false },
   function(isConfirm){
     if (isConfirm) {
+      // removes favorite location from db
       $.ajax({
         url:      '/destinations/' + $id,
         type:     'delete',
         dataType: 'json',
       }).done(function(){
+        // removes favorite location from dom
         $li.remove();
         swal("Deleted!", "Your destination has been deleted.", "success");
       })
@@ -202,6 +242,7 @@ var deleteFromFavorites = function($id, $li){
 
 $(document).ready(function(){
   $main                = $('.main');
+  $mainSearch          = $('.location-search');
   $display             = $('.display');
   $categoryTemplate    = $('#gplaces-category');
   $placeTemplate       = $('#gplaces-place');
@@ -223,9 +264,9 @@ $(document).ready(function(){
 
 
 
-  // when a user hits enter or the button to search for a location, these events are triggered:
+  // to search for a new location, these events are triggered:
   //   the google place api gets hit and information gets appended to the page
-  $('.location-search').on('submit', function(event){
+  $mainSearch.on('submit', function(event){
     event.preventDefault();
     $('.note-part').children().remove();
     $main.children().remove();
@@ -255,6 +296,7 @@ $(document).ready(function(){
 
   })
 
+  // a user can remove locations from favorites list
   $removeFromFavorite.click(function(){
     var $id = $(this).parent().attr('data-destination-id');
     var $li = $(this).parent();
