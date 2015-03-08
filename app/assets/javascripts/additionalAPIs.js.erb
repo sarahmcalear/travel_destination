@@ -1,0 +1,23 @@
+// TODO; optimize for speed
+// takes Wolfram Info and puts displays it on page via the template
+addWolframInfo = function(basicInfo, wolframMap, populationInfo, populationGrowthImg){
+  $(renderWolfram({
+    basicInfo: basicInfo,
+    wolframMap: wolframMap,
+    populationInfo: populationInfo,
+    populationChart:
+    populationGrowthImg})).appendTo($main);
+}
+
+// creates div with photo and appends it to the DOM
+addPaniramioPhoto = function($photoTitle, $ownerName, $photoUrl, $photoFileUrl, $date){
+  $(renderPanoramio({
+    photoTitle: $photoTitle,
+    ownerName: $ownerName,
+    photoUrl: $photoUrl,
+    photoFileUrl: $photoFileUrl,
+    date: $date
+  })).appendTo($('.images'));
+
+  $('.materialboxed').materialbox();
+}

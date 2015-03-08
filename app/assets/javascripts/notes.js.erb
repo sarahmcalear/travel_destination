@@ -1,0 +1,96 @@
+// adds a note form for the user to write new notes about a destination
+addNoteForm = function(id) {
+  $(renderNotesForm({id: id})).appendTo($('.note-part'));
+  $('#save-note').click(function(e){
+    e.preventDefault();
+    var $destination_id = $('#destination-id-input').val();
+    var $noteTitle = $('#note-title').val();
+    var $noteBody = $('#note-body').val();
+    $.ajax({
+      url:      '/notes',
+      type:     'post',
+      dataType: 'json',
+      data:     {note: {title: $noteTitle, body: $noteBody, destination_id: $destination_id}}
+    }).done(function(data){
+      console.log(data);
+      addNote([data]);
+    });
+  });
+}
+
+// displays notes already written
+addNote = function(data){
+  for (var i=0,len=data.length; i<len; i++){
+    var title;
+    data[i].title ? (title  = data[i].title) : (title = '');
+    var date   = data[i].created_at,
+        body   = data[i].body,
+        noteId = data[i].id;
+
+    $(renderNote({title: title, date: date, body: body, note_id: noteId})).appendTo($('.note-part'));
+  }
+  // add event listener on buttons to edit and delete
+  $('.edit-note-button').click(function(){
+    var $noteId       = $(this).parent().parent().attr('data-note-id'),
+        $title        = $(this).parent().parent().children('.card-content').children('.card-title').text(),
+        $body = $(this).parent().parent().children('.card-content').children('p').text();
+
+    editNote($noteId, $title, $body);
+  })
+
+
+  // delete
+  $('.delete-note-button').click(function(){
+    var $note = $(this).parent().parent();
+    var $noteId = $note.attr('data-note-id');
+    debugger
+    swal({
+      title: "Are you sure?",
+      text: "You will not be able to recover this note!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "Yes, delete it!",
+      closeOnConfirm: false
+    }, function(){
+      $.ajax({
+        url: '/notes/' + $noteId,
+        type: 'delete'
+      }).done(function(data){
+        $note.remove();
+        swal("Deleted!", "Your note has been deleted.", "success");
+      })
+    });
+  })
+}
+
+// edits existing notes (opens a new form and closes it)
+editNote = function($noteId, $title, $body){
+  var $currentNote = $('[data-note-id="' + $noteId + '"]');
+  console.log('hi from editNote, the function')
+  $currentNote.children().hide();
+  $(renderEditNote({title: $title, body: $body})).appendTo($currentNote);
+    // note update event listener functionality
+    $('#update-note').click(function(e){
+      e.preventDefault();
+      var $newTitle = $('#edit-title').val(),
+          $newBody  = $('#edit-body').val();
+      $.ajax({
+        url:      '/destinations/' + currentDestinationId + '/notes/' + $noteId,
+        type:     'put',
+        dataType: 'json',
+        data:     {note: {title: $newTitle, body: $newBody}}
+      }).done(function(data){
+        $currentNote.children().first('.card-content').children('.card-title').text(data.title);
+        $currentNote.children('.card-content').children('p').text(data.body);
+        $currentNote.children().show();
+        $('#note-edit-form').remove();
+      })
+
+    })
+    $('.cancel-note-edit').click(function(e){
+      e.preventDefault();
+      $currentNote.children().show();
+      $('#note-edit-form').remove();
+    })
+}

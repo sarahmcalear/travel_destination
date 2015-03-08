@@ -1,14 +1,36 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>TravelDestination</title>
-  <%= stylesheet_link_tag    'application', media: 'all' %>
-  <%= javascript_include_tag 'application' %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+  <head>
+    <title>TravelDestination</title>
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+    <%= csrf_meta_tags %>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  </head>
+  </head>
+  <body>
 
-<%= yield %>
+    <nav>
+      <div class="nav-wrapper teal accent-4">
+        <a href="#!" class="brand-logo truncate">Find Your Destination</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+        <ul class="right hide-on-med-and-down">
+          <li><%= link_to "Sign up", new_user_path if !current_user %></li>
+          <li><%= link_to "Log in", new_session_path if !current_user %></li>
+          <li><%= link_to "Edit Profile", edit_user_path(current_user), method: "get" if current_user %></li>
+          <li><%= link_to "Logout", session_path(current_user), method: "delete" if current_user %></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+          <li><%= link_to "Sign up", new_user_path if !current_user %></li>
+          <li><%= link_to "Log in", new_session_path if !current_user %></li>
+          <li><%= link_to "Edit Profile", edit_user_path(current_user), method: "get" if current_user %></li>
+          <li><%= link_to "Logout", session_path(current_user), method: "delete" if current_user %></li>
+        </ul>
+      </div>
+    </nav>
 
-</body>
+    <%= yield %>
+
+  </body>
 </html>

@@ -2,4 +2,12 @@
   display: none;
 }
 
+.login {
+  margin-top: 50px !important;
+  padding:    40px !important;
+}
+
+.login input[type='submit'] {
+  margin-top: 40px;
+}
 

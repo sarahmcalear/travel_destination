@@ -1,0 +1,69 @@
+// adds location to the favorites in the database
+addLocationToFavorites = function() {
+  var location = $(this).attr('class');
+  $.ajax({
+    url:      '/destinations',
+    type:     'post',
+    dataType: 'json',
+    data:     {destination: {location: location}}
+  }).success(function(data){
+    console.log(data)
+    // debugger
+    var newest_location = data[data.length - 1];
+    var id              = newest_location.id;
+    var location        = newest_location.location;
+    // calls function to add favorite in the DOM
+    addFavorite(id, location);
+  }).error(function(error){
+    sweetAlert("Oops...", "Something went wrong!", "error");
+    console.log("Status Code: "+error.status);
+    console.log("Status Text: "+error.statusText);
+  })
+}
+
+// adds ability for user to add a location to his/her favorites list in the DOM
+addFavorite = function(id, location) {
+  $(renderFavorite({id: id, location: location})).appendTo($favoritesList);
+  addNoteForm(id);
+
+  // adds functionality to the remove from favorites icon
+  $('.remove').click(function(){
+    var $id = $(this).parent().attr('data-destination-id');
+    var $li = $(this).parent();
+
+    // warning to ensure that the user meant to delete
+    deleteFromFavorites($id, $li)
+
+  })
+}
+
+// method to delete a destination from the favorites list
+var deleteFromFavorites = function($id, $li){
+  swal({
+  title: "Are you sure you want to delete this destination?",
+  text: "You will not be able to recover the data you have saved to it!",
+  type: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#DD6B55",
+  confirmButtonText: "Yes, delete it!",
+  cancelButtonText: "No, cancel!",
+  closeOnConfirm: false,
+  closeOnCancel: false },
+  function(isConfirm){
+    if (isConfirm) {
+      // removes favorite location from db
+      $.ajax({
+        url:      '/destinations/' + $id,
+        type:     'delete',
+        dataType: 'json',
+      }).done(function(){
+        // removes favorite location from dom
+        $li.remove();
+        swal("Deleted!", "Your destination has been deleted.", "success");
+      })
+    } else {
+      swal("Cancelled", "Your favorited destination is safe :)", "error");
+    }
+  });
+}
+
