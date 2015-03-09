@@ -68,7 +68,7 @@ applyInfoToDom = function(data){
         $photoFileUrl = panoramioDataPhotos[i].photo_file_url,
         $date         = panoramioDataPhotos[i].upload_date;
 
-    addPaniramioPhoto($photoTitle, $ownerName, $photoUrl, $photoFileUrl, $date)
+    addPanoramioPhoto($photoTitle, $ownerName, $photoUrl, $photoFileUrl, $date)
   }
   // adds materialize's carousel
   $('.slider').slider({full_width: false, height: 500}).removeClass('hidden');
@@ -136,6 +136,8 @@ $(document).ready(function(){
   $mainSearch.on('submit', function(event){
     event.preventDefault();
     $('.note-part').children().remove();
+    $('.images').html('');
+    $('.note-container').addClass('hidden');
     $main.children().remove();
     $generalInfo.children().remove();
     searchLocation = $('.location-input').val();
@@ -154,21 +156,20 @@ $(document).ready(function(){
       searchLocation = data.searchLocation;
       $generalInfo.children().remove();
       $main.children().remove();
+      $('.images').children().remove();
+      $('.images').html('');
       $(renderTitle({location: searchLocation})).appendTo($generalInfo);
       applyInfoToDom(data);
 
-    }).error(function(error){
-      sweetAlert("Oops...", "Something went wrong!", "error");
-      console.log("Status Code: "+error.status);
-      console.log("Status Text: "+error.statusText);
-    })
+    });
   })
 
   // a user can look at his saved favorites his favorites
   $favorites.click(function(){
     var $id            = $(this).parent().attr('data-destination-id');
     searchLocation = $(this).text();
-    $('.images').children().remove();
+    $('.note-container').removeClass('hidden');
+    $('.images').html('');
     $main.children().remove();
     // retrieve notes and additional information about the saved location
     $.ajax({

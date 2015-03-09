@@ -51,6 +51,9 @@
 * geocoder gem - for geolocation of places
 * uri gem - to build query params
 * httparty gem - to create connections to APIs
+* google place api -
+* Wolfram Alpha API -
+* Panoramio API -
 
 
 

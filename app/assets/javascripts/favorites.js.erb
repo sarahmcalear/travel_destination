@@ -1,6 +1,7 @@
 // adds location to the favorites in the database
 addLocationToFavorites = function() {
   var $location = $(this).parent().children('h4').attr('id');
+  $('.note-container').removeClass('hidden');
   $.ajax({
     url:      '/destinations',
     type:     'post',

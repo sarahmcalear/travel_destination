@@ -103,7 +103,6 @@ module ApplicationHelper
       "Kolkata, India",
       "Nanjing, China"
     ]
-    sample_destinations.sample
 
   end
 end

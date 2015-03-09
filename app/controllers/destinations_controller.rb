@@ -6,7 +6,7 @@ class DestinationsController < ApplicationController
     @user = User.find(session[:user_id])
     @note = Note.new
     @destinations = User.find(session[:user_id]).destinations
-    params[:location] ? (desired_destination = params[:location]) : (desired_destination = choose_random_destination)
+    params[:location] ? (desired_destination = params[:location]) : (desired_destination = choose_random_destination.sample)
     google_data = retrieve_info_from_google(desired_destination)
     panoramio_pics = retrieve_panoramio_photos(desired_destination)
     # TODO: optimize this for speed.

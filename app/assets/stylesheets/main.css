@@ -28,40 +28,26 @@
 }
 
 .note-container {
-  width: 1150px;
-  overflow: auto;
+  width: 100%;
+  overflow-x: auto;
   height: 300px;
 }
 
 .note-part {
   float: left;
   margin-right: -999em;
-  white-space: nowrap;
 }
 
-.note-display {
-  margin: 15px;
-  text-align: center;
-  float: left;
-  display: inline;
-  width: 350px;
-}
-
-.card-content {
-  max-width: 300px;
-}
-
-.note-text {
+#note-form-div {
   display: inline-block;
-  text-align: center;
+  width: 350px;
+  vertical-align: bottom;
 }
 
-.row.blue-grey-text {
-  margin: 15px;
-  text-align: center;
-  float: left;
-  display: inline;
-  width: 350px;
+#note-edit-form {
+  display: block;
+  clear: both;
+  max-height: 250px;
 }
 
 .main {
@@ -75,3 +61,7 @@
   clear: both;
 }
 
+.card-title {
+  font-size: 1em;
+  color: black;
+}
