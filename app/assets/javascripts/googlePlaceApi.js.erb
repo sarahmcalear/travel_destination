@@ -1,9 +1,8 @@
 
 // adds the category sections for specific information obtained from google
 addCategory = function($main, name) {
-  var $attachEl = $main;
   return $(renderCategory({name: name, title: _.capitalize(name.replace('_', ' '))}))
-   .appendTo($attachEl);
+   .appendTo($main);
 }
 
 // attaches the individual attractions to the document
@@ -15,5 +14,6 @@ addPlace = function($categoryEl, gid, name, src, rating) {
 
 // generates google's link to specific picture
 createPhotoUrl = function(photo_reference) {
-  return 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=' + photo_reference + '&key=<%= ENV["GOOGLE_BROWSER_API_KEY"] %>'
+  // 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=' + photo_reference + '&key=<%= ENV["GOOGLE_BROWSER_API_KEY"] %>'
+  return 'http://upload.wikimedia.org/wikipedia/commons/2/2c/Its_something.png'
 }

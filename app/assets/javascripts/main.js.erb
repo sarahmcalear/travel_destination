@@ -168,6 +168,7 @@ $(document).ready(function(){
   $favorites.click(function(){
     var $id            = $(this).parent().attr('data-destination-id');
     searchLocation = $(this).text();
+    $('.images').children().remove();
     $main.children().remove();
     // retrieve notes and additional information about the saved location
     $.ajax({
@@ -177,11 +178,10 @@ $(document).ready(function(){
     }).done(function(data){
       currentDestinationId = $id;
       $('.note-part').children().remove();
-      $('.images').children().remove();
       $generalInfo.children().remove();
       $(renderTitle({location: searchLocation})).appendTo($generalInfo);
-      addNote(data);
       addNoteForm($id);
+      addNote(data);
       requestInfoAboutPlace(searchLocation);
     });
 

@@ -27,18 +27,51 @@
   margin: 0;
 }
 
-.note-part {
-  width: 9900px;
-  height: 400px;
-  overflow-x: scroll;
-  overflow-y: hidden;
+.note-container {
+  width: 1150px;
+  overflow: auto;
+  height: 300px;
 }
 
-.card.blue-grey {
-  display: inline-block;
+.note-part {
+  float: left;
+  margin-right: -999em;
+  white-space: nowrap;
+}
+
+.note-display {
+  margin: 15px;
+  text-align: center;
+  float: left;
+  display: inline;
   width: 350px;
 }
 
+.card-content {
+  max-width: 300px;
+}
+
+.note-text {
+  display: inline-block;
+  text-align: center;
+}
+
+.row.blue-grey-text {
+  margin: 15px;
+  text-align: center;
+  float: left;
+  display: inline;
+  width: 350px;
+}
+
+.main {
+  margin-top: 30px;
+}
 
 
+/* Note Inputs */
+#save-note {
+  display: block;
+  clear: both;
+}
 
