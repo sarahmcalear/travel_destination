@@ -2,6 +2,8 @@ class DestinationsController < ApplicationController
   include DestinationHelper
   include ApplicationHelper
 
+  before_action :authenticate,
+
   def index
     @user = User.find(session[:user_id])
     @note = Note.new

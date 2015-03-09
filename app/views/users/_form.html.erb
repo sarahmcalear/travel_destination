@@ -1,12 +1,16 @@
-<%= form_for @user do |f| %>
-  <%= f.label :fname, "First Name" %>:
-  <br>
-  <%= f.text_field :fname %>
-  <br><br>
-  <%= f.label :lname, "Last Name" %>:
-  <br>
-  <%= f.text_field :lname %>
-  <br><br>
+<%= form_for @user, {class: 'login-form col s12'}  do |f| %>
+  <div {class: "input-field col s6"}>
+    <%= f.label :fname, "First Name"%>:
+    <br>
+    <%= f.text_field :fname %>
+    <br><br>
+  </div>
+  <div {class: "input-field col s6"}>
+    <%= f.label :lname, "Last Name" %>:
+    <br>
+    <%= f.text_field :lname %>
+    <br><br>
+  </div>
   <%= f.label :email, "Email" %>:
   <br>
   <%= f.email_field :email %>
@@ -19,5 +23,6 @@
   <br>
   <%= f.password_field :password_confirmation %>
   <br><br>
-  <%= f.submit "Save" %>
+  <%= f.submit "Save", {:class => 'btn waves-light'} %>
 <% end %>
+
