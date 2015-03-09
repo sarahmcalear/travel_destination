@@ -11,14 +11,12 @@ class DestinationsController < ApplicationController
     params[:location] ? (desired_destination = params[:location]) : (desired_destination = choose_random_destination.sample)
     google_data = retrieve_info_from_google(desired_destination)
     panoramio_pics = retrieve_panoramio_photos(desired_destination)
+    # weather = retrieve_weather_from_wunderground(desired_destination)
     # TODO: optimize this for speed.
     # wolfram_data = retrieve_info_from_wolfram(desired_destination)
     respond_to do |format|
       format.html
-      # TODO: optimize wolfram datafor speed
-      # format.json { render json: {google_data: google_data, wolfram_data: wolfram_data} }
       format.json { render json: {google_data: google_data, panoramio_pics: panoramio_pics, searchLocation: desired_destination} }
-      # format.json { render json: {panoramio_pics: panoramio_pics, searchLocation: desired_destination} }
     end
   end
 

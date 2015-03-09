@@ -32,6 +32,10 @@ var $main,
 // a user searches for a location, either through favorites or new search.
 // this retrieves te info from the google place api
 requestInfoAboutPlace = function(searchLocation) {
+  // $generalInfo.children().remove();
+      $main.children().remove();
+      $('.images').children().remove();
+      $('.images').html('');
   $.ajax({
     url:      '/destinations',
     type:     'get',
@@ -39,7 +43,6 @@ requestInfoAboutPlace = function(searchLocation) {
     data:     {location: searchLocation}
   }).success(function(data){
     applyInfoToDom(data)
-
   }).error(function(error){
     sweetAlert("Oops...", "Something went wrong!", "error");
     console.log("Status Code: "+error.status);

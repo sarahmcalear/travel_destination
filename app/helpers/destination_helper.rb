@@ -41,38 +41,16 @@ module DestinationHelper
     "http://www.panoramio.com/map/get_panoramas.php" + query_params
   end
 
-  # types = "food|cafe|bar|night_club|casino|spa|zoo|aquarium|stadium|museum".split("|")
-  # types.each do |type|
-  #   define_method "sort_by_#{type}"(information) do
-  #      type
-  #     type = information.select do |place|
-  #       place["types"].include? type
-  #     end
-  #     if "#{type}s" != []
-  #       sorted_"#{type}s" = "#{type}s".sort_by {|this_type| this_type["rating"]}.reverse
-  #     else
-  #       sorted_"#{type}s" = []
-  #     end
-  #   end
-  # end
+  def generate_weather_underground_link(geolocation)
+    "http://api.wunderground.com/api/" + ENV["WEATHER_UNDERGROUND_API"] + "/forecast/q/" + geolocation[:latitude].to_s + "," + geolocation[:longitude].to_s + ".json"
+  end
 
-  # def sort_info_by_category(information)
-  #   types = "food|cafe|bar|night_club|casino|spa|zoo|aquarium|stadium|museum".split("|")
-  #   types.each do |type|
-  #     define_method "sort_by_#{type}" do
-  #        type
-  #       type = information.select do |place|
-  #         place["types"].include? type
-  #       end
-  #       if "#{type}s" != []
-  #         sorted_"#{type}s" = "#{type}s".sort_by {|this_type| this_type["rating"]}.reverse
-  #       else
-  #         sorted_"#{type}s" = []
-  #       end
-  #     end
-  #   end
-  #   {restaurants: sorted_foods, cafes: sorted_cafes, bars: sorted_bars, spas: sorted_spas}
-  # end
+  def retrieve_weather_from_wunderground(destination)
+    geolocation = find_latitude_and_longitude(destination)
+    link = generate_weather_underground_link(geolocation)
+    HTTParty.get(link)
+  end
+
 
   def sort_info_by_category(information)
     foods = information["results"].select do |place|
