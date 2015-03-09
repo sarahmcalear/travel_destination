@@ -1,11 +1,11 @@
 // adds location to the favorites in the database
 addLocationToFavorites = function() {
-  var location = $(this).attr('class');
+  var $location = $(this).parent().children('h4').attr('id');
   $.ajax({
     url:      '/destinations',
     type:     'post',
     dataType: 'json',
-    data:     {destination: {location: location}}
+    data:     {destination: {location: $location}}
   }).success(function(data){
     console.log(data)
     // debugger

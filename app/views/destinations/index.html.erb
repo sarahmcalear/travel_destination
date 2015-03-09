@@ -1,6 +1,6 @@
 <div class="row">
 
-  <div class="col s3">
+  <div class="col s2">
         <!-- Grey navigation panel -->
     <div class="left-part">
       <h5>My Favorite Destinations:</h5>
@@ -15,24 +15,34 @@
     </div>
   </div>
 
-  <div class="col s9">
+  <div class="col s10">
         <!-- Teal page content  -->
     <div class="box">
       <div class="top-part">
         <h1>Hello <%= @user.fname %>!</h1>
 
-        <form class="location-search">
-          <label>Search by location
-            <input type="text" name="location" class="location-input", placeholder="City, State/Country" value="Brooklyn, NY">
-          </label>
-          <input type="submit" name="Search" class="location-search-button btn waves-light" value="Search">
-        </form>
-        <button id="random-search" class="btn waves-light">Explore new Places!</button>
+        <div class="row">
+          <form class="location-search col s12">
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="location" type="text" class="location-input validate">
+                <label for="location">Search by City, State/Country</label>
+              </div>
+              <div class="input-field col s6">
+                <input type="submit" value="Search" class="location-search-button btn waves-light">
+                <button id="random-search" class="btn waves-light waves-effect">Explore new Places!</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
       </div>
 
       <div class="general-info"></div>
       <div class="note-part"></div>
-      <div class="images"></div>
+      <div class="slider col s8 hidden">
+        <ul class="images slides"></ul>
+      </div>
       <div class="main"></div>
 
     </div>
@@ -41,8 +51,10 @@
 </div>
 
 <script id="title" type="text/template">
-  <h2>Showing Results for <%%= location %></h2>
-  <button class="<%%= location %> btn waves-light" id="add-location-button">Add Destination to Favorites</button>
+  <div class="col s12">
+    <h4 id="<%%= location %>" class="col s7">Showing Results for <%%= location %></h4>
+    <button class="<%%= location %> col s3 waves-effect btn waves-light" id="add-location-button">Add Destination to Favorites</button>
+  </div>
 </script>
 
 <script id="outline" type="text/template">
@@ -60,11 +72,18 @@
 
 <script id="gplaces-place" type="text/template">
   <li>
-    <div class="place" data-gid="<%%= gid %>">
-      <h5><%%= name %></h5>
-      <img src="<%%= src %>">
-      <p>Rating: <%%= rating %></p>
-      <button class="add-to-list" >Add to my Favorites</button>
+    <div class="row">
+      <div class="col s12 m7">
+        <div class="card place" data-gid="<%%= gid %>">
+          <div class="card-image">
+            <img src="<%%= src %>">
+            <span class="card-title"><%%= name %></span>
+          </div>
+          <div class="card-content">
+            <p>Rating: <%%= rating %></p>
+          </div>
+        </div>
+      </div>
     </div>
   </li>
 </script>
@@ -92,7 +111,7 @@
         <input name="destination_id" type="hidden" value="<%%= id %>" id="destination-id-input">
         <div>
           <a class="">
-            <span id="save-note"><i class="mdi-action-done-all teal-text"></i></span>
+            <span id="save-note" class="teal-text"><i class="mdi-action-done-all teal-text"></i>  Save</span>
           </a>
         </div>
       </div>
@@ -149,7 +168,7 @@
 </script>
 
 
-<script id="panoramio-template" type="text/template">
+<script id="panoramio-template2" type="text/template">
   <div class="row">
     <div class="col s12 m7">
       <div class="card">
@@ -161,7 +180,7 @@
           <p><%%= photoTitle %></p>
         </div>
         <div class="card-action">
-          <a href="<%%= photoUrl %>">Click here to buy this Photo</a>
+          <a href="<%%= photoUrl %>" class="teal-text">Click here to buy this Photo</a>
         </div>
       </div>
     </div>
@@ -169,10 +188,14 @@
 </script>
 
 
-
-
-
-
-
+<script id="panoramio-template" type="text/template">
+  <li>
+    <img src="<%%= photoFileUrl %>">
+    <div class="caption center-align">
+      <h3><%%= ownerName %> on <%%= date %></h3>
+      <h5 class="light grey-text text-lighten-3"><%%= photoTitle %></h5>
+    </div>
+  </li>
+</script>
 
 

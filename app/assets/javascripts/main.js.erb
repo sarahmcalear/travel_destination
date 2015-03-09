@@ -29,11 +29,6 @@ var $main,
     currentDestinationId,
     searchLocation;
 
-// I don't think I need this anymore!!!!!!!!!!!!!!!!!!
-// addDisplayDiv = function(location) {
-//   return $(renderDisplayDiv({location: _.capitalize(location)})).appendTo($main);
-// }
-
 // a user searches for a location, either through favorites or new search.
 // this retrieves te info from the google place api
 requestInfoAboutPlace = function(searchLocation) {
@@ -64,6 +59,7 @@ applyInfoToDom = function(data){
   // calls method to display Wolfram Info
   // addWolframInfo(basicInfo, wolframMap, populationInfo, populationGrowthImg);
   var panoramioDataPhotos = data.panoramio_pics.photos;
+
   // creates a for loop for the panoramio pictures to be appended to the DOM
   for (var i=0, len=panoramioDataPhotos.length; i<len; i++){
     var $photoUrl     = panoramioDataPhotos[i].photo_url,
@@ -74,9 +70,9 @@ applyInfoToDom = function(data){
 
     addPaniramioPhoto($photoTitle, $ownerName, $photoUrl, $photoFileUrl, $date)
   }
+  // adds materialize's carousel
+  $('.slider').slider({full_width: false, height: 500}).removeClass('hidden');
 
-  // calls method to create a div for the searched data
-  // var $displayEl = addDisplayDiv(searchLocation);
   var googleData = data.google_data;
   // creates categories and displays data within
   for (var category in googleData) {
@@ -135,8 +131,6 @@ $(document).ready(function(){
   // materialize navigational panel slide out
   $(".button-collapse").sideNav();
 
-
-
   // to search for a new location, these events are triggered:
   //   the google place api gets hit and information gets appended to the page
   $mainSearch.on('submit', function(event){
@@ -156,9 +150,10 @@ $(document).ready(function(){
       url:      '/destinations',
       type:     'get',
       dataType: 'json'
-    }).done(function(data){
+    }).success(function(data){
       searchLocation = data.searchLocation;
       $generalInfo.children().remove();
+      $main.children().remove();
       $(renderTitle({location: searchLocation})).appendTo($generalInfo);
       applyInfoToDom(data);
 
@@ -182,6 +177,7 @@ $(document).ready(function(){
     }).done(function(data){
       currentDestinationId = $id;
       $('.note-part').children().remove();
+      $('.images').children().remove();
       $generalInfo.children().remove();
       $(renderTitle({location: searchLocation})).appendTo($generalInfo);
       addNote(data);

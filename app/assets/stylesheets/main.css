@@ -11,3 +11,34 @@
   margin-top: 40px;
 }
 
+.general-info h4 {
+  margin-top: 1px;
+}
+
+.top-part h1 {
+    margin-left: 1em;
+}
+
+.location-search-button {
+  margin: 0;
+}
+
+#random-search {
+  margin: 0;
+}
+
+.note-part {
+  width: 9900px;
+  height: 400px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.card.blue-grey {
+  display: inline-block;
+  width: 350px;
+}
+
+
+
+
