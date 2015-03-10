@@ -45,11 +45,11 @@ module DestinationHelper
     "http://api.wunderground.com/api/" + ENV["WEATHER_UNDERGROUND_API"] + "/forecast/q/" + geolocation[:latitude].to_s + "," + geolocation[:longitude].to_s + ".json"
   end
 
-  def retrieve_weather_from_wunderground(destination)
-    geolocation = find_latitude_and_longitude(destination)
-    link = generate_weather_underground_link(geolocation)
-    HTTParty.get(link)
-  end
+  # def retrieve_weather_from_wunderground(destination)
+  #   geolocation = find_latitude_and_longitude(destination)
+  #   link = generate_weather_underground_link(geolocation)
+  #   HTTParty.get(link)
+  # end
 
 
   def sort_info_by_category(information)

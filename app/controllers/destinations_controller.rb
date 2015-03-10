@@ -2,14 +2,14 @@ class DestinationsController < ApplicationController
   include DestinationHelper
   include ApplicationHelper
 
-  before_action :authenticate,
+  before_action :authenticate
 
   def index
     @user = User.find(session[:user_id])
     @note = Note.new
     @destinations = User.find(session[:user_id]).destinations
-    params[:location] ? (desired_destination = params[:location]) : (desired_destination = choose_random_destination.sample)
-    google_data = retrieve_info_from_google(desired_destination)
+    desired_destination = params[:location] ? params[:location] : choose_random_destination.sample
+    google_data    = retrieve_info_from_google(desired_destination)
     panoramio_pics = retrieve_panoramio_photos(desired_destination)
     # weather = retrieve_weather_from_wunderground(desired_destination)
     # TODO: optimize this for speed.

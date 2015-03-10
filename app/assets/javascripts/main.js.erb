@@ -32,6 +32,7 @@ var $main,
 // a user searches for a location, either through favorites or new search.
 // this retrieves te info from the google place api
 requestInfoAboutPlace = function(searchLocation) {
+  console.log("ajax request to /destinations requested")
   // $generalInfo.children().remove();
       $main.children().remove();
       $('.images').children().remove();
@@ -40,13 +41,9 @@ requestInfoAboutPlace = function(searchLocation) {
     url:      '/destinations',
     type:     'get',
     dataType: 'json',
-    data:     {location: searchLocation}
-  }).success(function(data){
-    applyInfoToDom(data)
-  }).error(function(error){
-    sweetAlert("Oops...", "Something went wrong!", "error");
-    console.log("Status Code: "+error.status);
-    console.log("Status Text: "+error.statusText);
+    data:     { location: searchLocation }
+  }).done(function(data){
+    applyInfoToDom(data);
   })
 }
 
@@ -163,7 +160,6 @@ $(document).ready(function(){
       $('.images').html('');
       $(renderTitle({location: searchLocation})).appendTo($generalInfo);
       applyInfoToDom(data);
-
     });
   })
 
