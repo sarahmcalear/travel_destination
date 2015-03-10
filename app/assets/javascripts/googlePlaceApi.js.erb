@@ -14,6 +14,7 @@ addPlace = function($categoryEl, gid, name, src, rating) {
 
 // generates google's link to specific picture
 createPhotoUrl = function(photo_reference) {
-  return 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=' + photo_reference + '&key=<%= ENV["GOOGLE_BROWSER_API_KEY"] %>'
-  // return 'http://upload.wikimedia.org/wikipedia/commons/2/2c/Its_something.png'
+  // return 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=' + photo_reference + '&key=<%= ENV["GOOGLE_KEVIN_API"] %>'
+  // ENV["GOOGLE_KEVIN_API"]
+  return 'http://media-cdn.tripadvisor.com/media/photo-s/05/3d/a9/4f/peninsula-restaurant.jpg'
 }

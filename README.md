@@ -1,5 +1,7 @@
 # Travel Destination App
 
+## [Travel Destination](http://travel-destination.herokuapp.com/destinations)
+
 ## Description
 
 >This app allows people who love to travel to come up with more ideas for future trips. It helps organize trips and find destinations that one might have never been to. This information can be stored, reviewed, and edited at a later time.
@@ -45,43 +47,31 @@
 
 ## For Copying:
 
-#### Gems/APIs used:
+#### Gems/APIs/Frameworks used:
 
 * bcrypt gem - for authentication of users
 * geocoder gem - for geolocation of places
 * uri gem - to build query params
 * httparty gem - to create connections to APIs
-* google place api -
-* Wolfram Alpha API -
-* Panoramio API -
+* google place api - to add in information about restaurants and other places to visit in a specific area [click here to see the Google Place API](https://developers.google.com/places/documentation/)
+* Wolfram Alpha API - eventually to retrieve additional information about the location entered [click here to see the Wolfram Alpha API documentation](http://products.wolframalpha.com/api/)
+* Panoramio API - to get pictures of the area [click here to see the Panoramio API](http://www.panoramio.com/api/widget/api.html)
+* Materialize - to style the page [click here to view](http://materializecss.com/)
+* Sweet Alert - for pretty pop ups [click here to view](http://tristanedwards.me/sweetalert)
+
+## Instructions to run the App
+
+Clone the Repo and cd into it
+
+  $ git clone git@github.com:sarahmcalear/travel_destination.git
+  $ cd travel_destination
+
+  To run this App, a Google Place API key is required.
+
+  Now install the required Gems, rake db:setup, and start up your app in Terminal.
+
+  $ bundle install
+  $ rake db:setup
+  $ rails s puma
 
 
-
-== README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.

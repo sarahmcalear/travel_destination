@@ -13,8 +13,9 @@ module DestinationHelper
       location: "#{geolocation[:latitude]} , #{geolocation[:longitude]}",
       types:    "food|cafe|bakery|bar|night_club|casino|spa|zoo|aquarium|amusement_park|park|library|stadium|museum",
       radius:   5000,
-      key:      ENV["GOOGLE_BROWSER_API_KEY"]
+      key:      ENV["GOOGLE_KEVIN_API"]
       })
+    # ENV["GOOGLE_KEVIN_API"]
     "https://maps.googleapis.com/maps/api/place/nearbysearch/json" + query_params
   end
 

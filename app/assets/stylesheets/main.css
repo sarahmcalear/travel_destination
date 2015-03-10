@@ -62,8 +62,8 @@
 }
 
 .card-title {
-  font-size: 1em;
-  color: black;
+  font-size: 1em !important;
+  /*color: black !important;*/
 }
 
 .slider {
