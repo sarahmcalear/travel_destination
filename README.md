@@ -61,7 +61,7 @@
 
 ## Instructions to run the App
 
-Clone the Repo and cd into it
+  Clone the Repo and cd into it
 
   $ git clone git@github.com:sarahmcalear/travel_destination.git
   $ cd travel_destination
@@ -72,6 +72,6 @@ Clone the Repo and cd into it
 
   $ bundle install
   $ rake db:setup
-  $ rails s puma
+  $ rails s
 
 
